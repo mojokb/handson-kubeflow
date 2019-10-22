@@ -1,0 +1,3 @@
+kubeflow==0.0.3
+kubeflow-fairing==0.6.0
+#tensorflow==1.13.1
