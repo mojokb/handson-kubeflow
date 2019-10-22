@@ -63,19 +63,17 @@ kubeflow 설치는 쿠버네티스 클러스터가 있어야 가능하기 때문
    ```
 
 ### 4. Fairing - install fairing library in notekbook
-   - pip install
-      ```
-     pip3 install kubeflow-fairing
-     ```
-   - install from repo.
-
-    ```
-     git clone https://github.com/kubeflow/fairing
-     cd fairing
-     pip3 install -r examples/prediction/requirements.txt 
-     pip3 setup.py install
-    ```
-
+   - pip install  
+       ```
+       pip3 install kubeflow-fairing
+       ```
+   - install from repo.  
+       ```
+       git clone https://github.com/kubeflow/fairing
+       cd fairing
+       pip3 install -r examples/prediction/requirements.txt 
+       pip3 setup.py install
+       ```
 ### 5. Fairing - simple example with my cluster.
 
 ### 6. Fairing - wrap fairing library, build model/ remote Image, submit job to cluster
