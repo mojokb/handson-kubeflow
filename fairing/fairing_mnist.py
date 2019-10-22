@@ -22,7 +22,7 @@ class MyModel(object):
         L1 = tf.nn.relu(tf.matmul(X, W1) + b1)
         L1 = tf.nn.dropout(L1, keep_prob=keep_prob)
 
-        W2 = tf.get_variable("W3", shape=[512, 10],
+        W2 = tf.get_variable("W2", shape=[512, 10],
                              initializer=tf.contrib.layers.xavier_initializer())
         b2 = tf.Variable(tf.random_normal([10]))
 
