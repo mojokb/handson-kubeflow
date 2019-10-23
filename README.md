@@ -12,8 +12,8 @@ local 진행이기 때문에 kubeflow설치를 위해 minikube를 사용합니�
 ### Install minikube
 - https://minikube.sigs.k8s.io/docs/start/macos/ 참조
     ```
-    $ minikube start --kubernetes-version v1.14.1 --cpus 4 --memory 8096 --disk-size=40g
-    ```    
+    $ minikube start --kubernetes-version v1.14.1 --cpus 4 --memory 8096 --disk-size=40g --insecure-registry handson-registry:15000
+    ```
 
 ### Install kubeflow in minikube
 
@@ -93,7 +93,7 @@ local 진행이기 때문에 kubeflow설치를 위해 minikube를 사용합니�
    # for private registry
    kubectl create secret generic regcred \
     --from-file=.dockerconfigjson=/home/vagrant/.docker/config.json \
-    --type=kubernetes.io/dockerconfigjson -n kubeflow-user
+    --type=kubernetes.io/dockerconfigjson -n kubeflow-test
 
    # 서비스 어카운트에 imagePullSecrets 설정
    $ kubectl patch serviceaccount default \
