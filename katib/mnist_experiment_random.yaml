@@ -31,7 +31,7 @@ spec:
                   image: gcr.io/handon-kubeflow/fairing-job/katib-mnist:44AE6CB3
                   command:
                   - "python"
-                  - "/app/katib-mnist.py"
+                  - "/app/mnist.py"
                   {{- with .HyperParameters}}
                   {{- range .}}
                   - "{{.Name}}={{.Value}}"
