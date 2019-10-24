@@ -115,7 +115,7 @@ timeout="1000"
 start_time=`date +%s`
 NODE_PORTS=""
 while [ -z "$NODE_PORTS" ]; do
-  PUBLIC_IP=$(kubectl get svc -n $KUBERNETES_NAMESPACE $NAME -o jsonpath='{.spec.ports[0].nodePort}' 2> /dev/null)
+  NODE_PORTS=$(kubectl get svc -n $KUBERNETES_NAMESPACE $NAME -o jsonpath='{.spec.ports[0].nodePort}' 2> /dev/null)
   current_time=`date +%s`
   elapsed_time=$(expr $current_time + 1 - $start_time)
   if [[ $elapsed_time -gt $timeout ]];then
