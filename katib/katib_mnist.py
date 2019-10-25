@@ -88,7 +88,7 @@ class MyModel(object):
         '''
 
 if __name__ == '__main__':
-    if os.getenv('FAIRING_RUNTIME', None) is not  None:
+    if os.getenv('FAIRING_RUNTIME', None) is None:
         from kubeflow import fairing
         from kubeflow.fairing.kubernetes import utils as k8s_utils
 
