@@ -7,7 +7,7 @@ from kubeflow import fairing
 DOCKER_REGISTRY = 'index.docker.io/brightfly/fairing'
 fairing.config.set_builder(
     'append',
-    base_image='tensorflow/tensorflow:1.13.1-py3',
+    base_image='gcr.io/kubeflow-images-public/tensorflow-1.13.1-notebook-cpu:v0.5.0',
     registry=DOCKER_REGISTRY,
     push=True)
 fairing.config.set_deployer('job')
