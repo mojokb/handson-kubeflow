@@ -92,9 +92,7 @@ if __name__ == '__main__':
         from kubeflow import fairing
         from kubeflow.fairing.kubernetes import utils as k8s_utils
 
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/jovyan/auth.json"
-        GCP_PROJECT = fairing.cloud.gcp.guess_project_name()
-        DOCKER_REGISTRY = 'gcr.io/{}/fairing-job'.format(GCP_PROJECT)
+        DOCKER_REGISTRY = 'brightfly/fairing-job'
         fairing.config.set_builder(
             'append',
             base_image='gcr.io/kubeflow-images-public/tensorflow-1.13.1-notebook-cpu:v0.5.0',
