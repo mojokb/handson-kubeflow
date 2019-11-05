@@ -40,7 +40,6 @@ class MyModel(object):
                   callbacks=[KatibMetricLog()])
 
 
-
 class KatibMetricLog(Callback):
     def on_batch_end(self, batch, logs={}):
         print("batch", str(batch),

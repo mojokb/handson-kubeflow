@@ -1,8 +1,10 @@
-apiVersion: "kubeflow.org/v1alpha2"
+apiVersion: "kubeflow.org/v1alpha3"
 kind: Experiment
 metadata:
   namespace: kubeflow
-  name: random-experiment
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: handson-experiment-1
 spec:
   parallelTrialCount: 1
   maxTrialCount: 5
@@ -13,6 +15,8 @@ spec:
     objectiveMetricName: Validation-accuracy
     additionalMetricNames:
       - accuracy
+      - loss
+      - Validation-loss
   algorithm:
     algorithmName: random
   trialTemplate:
@@ -28,10 +32,10 @@ spec:
               spec:
                 containers:
                 - name: {{.Trial}}
-                  image: gcr.io/handon-kubeflow/fairing-job/katib-mnist:44AE6CB3
+                  image: registry.zipsacoding.com/katib-job:3F2CF439
                   command:
                   - "python"
-                  - "/app/mnist.py"
+                  - "/app/katib_keras_mnist.py"
                   {{- with .HyperParameters}}
                   {{- range .}}
                   - "{{.Name}}={{.Value}}"
