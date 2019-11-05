@@ -32,7 +32,7 @@ spec:
               spec:
                 containers:
                 - name: {{.Trial}}
-                  image: registry.zipsacoding.com/katib-job:3F2CF439
+                  image: registry.zipsacoding.com/katib-job:32B00A85
                   command:
                   - "python"
                   - "/app/katib_keras_mnist.py"
