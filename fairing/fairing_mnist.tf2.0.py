@@ -37,6 +37,7 @@ if __name__ == '__main__':
             push=True)
         # cpu 1, memory 1GiB
         fairing.config.set_deployer('job',
+                                    namespace='test',
                                     pod_spec_mutators=[
                                         k8s_utils.get_resource_mutator(cpu=2,
                                                                        memory=5)]
