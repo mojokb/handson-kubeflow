@@ -1,9 +1,7 @@
-FROM python:3.6
+FROM jupyter/minimal-notebook
 
-WORKDIR /jup
-
-RUN pip install jupyter -U && pip install jupyterlab
+RUN pip install jupyterlab && \
+    jupyter serverextension enable --py jupyterlab --sys-prefix
 
 EXPOSE 8888
-
-ENTRYPOINT ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]
+CMD ["jupyter", "lab"]

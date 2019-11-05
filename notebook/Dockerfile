@@ -1,11 +1,15 @@
-FROM python:3.6
+FROM jupyter/minimal-notebook
 
-WORKDIR /jup
+WORKDIR /home/jovyan
 
-RUN pip install jupyter -U && pip install jupyterlab
+RUN pip install jupyterlab && \
+    jupyter serverextension enable --py jupyterlab --sys-prefix
 
 EXPOSE 8888
 
+
+ENV NB_USER=jovyan
+ENV NB_UID=1000
 ENV NB_PREFIX /
 
-CMD ["jupyter", "lab", "--notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX}"]
+CMD ["sh", "-c", "jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --LabApp.token='' --LabApp.password='' --LabApp.allow_origin='*' --LabApp.base_url=${NB_PREFIX}"]
