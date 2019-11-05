@@ -4,19 +4,17 @@ import tensorflow as tf
 from kubeflow import fairing
 # Setting up google container repositories (GCR) for storing output containers
 # You can use any docker container registry istead of GCR
-DOCKER_REGISTRY = 'index.docker.io/brightfly/fairing'
+DOCKER_REGISTRY = 'registry.zipsacoding.com'
 fairing.config.set_builder(
     'append',
-    base_image='gcr.io/kubeflow-images-public/tensorflow-1.13.1-notebook-cpu:v0.5.0',
+    base_image='gcr.io/kubeflow-images-public/tensorflow-2.0.0a0-notebook-gpu:v0.7.0',
     registry=DOCKER_REGISTRY,
     push=True)
 fairing.config.set_deployer('job')
 
 
 def train():
-    hostname = tf.constant(os.environ['PATH'])
-    sess = tf.Session()
-    print(sess.run(hostname))
+    tf.print(tf.constant(os.environ['HOSTNAME']))
 
 if __name__ == '__main__':
     print('local train()')
