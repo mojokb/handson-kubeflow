@@ -10,8 +10,8 @@ fairing.config.set_builder(
     base_image='gcr.io/kubeflow-images-public/tensorflow-2.0.0a0-notebook-gpu:v0.7.0',
     registry=DOCKER_REGISTRY,
     push=True)
-fairing.config.set_deployer('job')
-
+fairing.config.set_deployer('job',
+                            namespace='test')
 
 def train():
     tf.print(tf.constant(os.environ['HOSTNAME']))
