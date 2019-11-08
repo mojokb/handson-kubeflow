@@ -1,8 +1,10 @@
-FROM jupyter/minimal-notebook
+FROM python:3.6
 
 WORKDIR /home/jovyan
 
 USER root
+
+RUN pip install jupyter -U && pip install jupyterlab
 
 RUN apt-get update && apt-get install -yq --no-install-recommends \
   apt-transport-https \
