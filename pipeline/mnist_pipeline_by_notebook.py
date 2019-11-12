@@ -1,3 +1,4 @@
+import kfp
 import kfp.dsl as dsl
 import kfp.gcp as gcp
 import kfp.onprem as onprem
@@ -73,7 +74,11 @@ def mnist_pipeline(model_export_dir='gs://your-bucket/export',
             step.apply(onprem.mount_pvc(pvc_name, 'local-storage', '/mnt'))
 
 
+arguments = {'model_export_dir': '/mnt/export',
+             'train_steps':'200',
+             'learning_rate':'0.01',
+             'batch_size':'100',
+             'pvc_name':'task-pv-claim3'}
 if __name__ == '__main__':
-    import kfp.compiler as compiler
-
-    compiler.Compiler().compile(mnist_pipeline, __file__ + '.tar.gz')
+    kfp.Client().create_run_from_pipeline_func(pipeline_func=mnist_pipeline,
+                                               arguments=arguments)
