@@ -32,7 +32,7 @@ spec:
               spec:
                 containers:
                 - name: {{.Trial}}
-                  image: registry.zipsacoding.com/katib-job:32B00A85
+                  image: brightfly/katib-job:handson
                   command:
                   - "python"
                   - "/app/katib_keras_mnist.py"
