@@ -8,7 +8,7 @@ metadata:
 spec:
   ports:
   - name: registry
-    port: 5000
+    port: 30000
     protocol: TCP
     targetPort: 5000
     nodePort: 30000
