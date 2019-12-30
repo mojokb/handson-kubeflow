@@ -3,18 +3,15 @@ import kfp.dsl as dsl
 import kfp.gcp as gcp
 import kfp.onprem as onprem
 
-platform = 'onprem'
-
-
 @dsl.pipeline(
     name='MNIST',
     description='A pipeline to train and serve the MNIST example.'
 )
-def mnist_pipeline(model_export_dir='gs://your-bucket/export',
+def mnist_pipeline(model_export_dir='/mnt/export',
                    train_steps='200',
                    learning_rate='0.01',
                    batch_size='100',
-                   pvc_name=''):
+                   pvc_name='task-pv-claim'):
     """
     Pipeline with three stages:
       1. train an MNIST classifier
@@ -37,11 +34,10 @@ def mnist_pipeline(model_export_dir='gs://your-bucket/export',
         '--model-export-path', model_export_dir,
         '--server-name', "mnist-service"
     ]
-    if platform != 'GCP':
-        serve_args.extend([
-            '--cluster-name', "mnist-pipeline",
-            '--pvc-name', pvc_name
-        ])
+    serve_args.extend([
+        '--cluster-name', "mnist-pipeline",
+        '--pvc-name', pvc_name
+    ])
 
     serve = dsl.ContainerOp(
         name='serve',
@@ -68,17 +64,14 @@ def mnist_pipeline(model_export_dir='gs://your-bucket/export',
 
     steps = [train, serve, web_ui]
     for step in steps:
-        if platform == 'GCP':
-            step.apply(gcp.use_gcp_secret('user-gcp-sa'))
-        else:
-            step.apply(onprem.mount_pvc(pvc_name, 'local-storage', '/mnt'))
+        step.apply(onprem.mount_pvc(pvc_name, 'local-storage', '/mnt'))
 
 
 arguments = {'model_export_dir': '/mnt/export',
              'train_steps':'200',
              'learning_rate':'0.01',
              'batch_size':'100',
-             'pvc_name':'task-pv-claim3'}
+             'pvc_name':'task-pv-claim'}
 if __name__ == '__main__':
     kfp.Client().create_run_from_pipeline_func(pipeline_func=mnist_pipeline,
                                                arguments=arguments)
