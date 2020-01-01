@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: task-pv-claim
+  name: pipeline-pvc1 
   namespace: kubeflow
 spec:
   storageClassName: nfs-client 
