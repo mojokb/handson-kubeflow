@@ -60,23 +60,19 @@ if __name__ == '__main__':
         from kubeflow import fairing
         from kubeflow.fairing.kubernetes import utils as k8s_utils
 
-        DOCKER_REGISTRY = 'registry.zipsacoding.com'
+        DOCKER_REGISTRY = 'kubeflow-registry.default.svc.cluster.local:30000'
         fairing.config.set_builder(
             'append',
             image_name='katib-job',
-            base_image='gcr.io/kubeflow-images-public/tensorflow-2.0.0a0-notebook-gpu:v0.7.0',
+            base_image='brightfly/kubeflow-jupyter-lab:tf2.0-gpu',
             registry=DOCKER_REGISTRY,
             push=True)
         # cpu 1, memory 1GiB
         fairing.config.set_deployer('job',
-                                    namespace='test',
-                                    pod_spec_mutators=[
-                                        k8s_utils.get_resource_mutator(cpu=2,
-                                                                       memory=5)]
-
+                                    namespace='amaramusic'
                                     )
         # python3
-        fairing.config.set_preprocessor('python', input_files=[__file__])
+        #fairing.config.set_preprocessor('python', input_files=[__file__])
         fairing.config.run()
     else:
         remote_train = MyModel()
