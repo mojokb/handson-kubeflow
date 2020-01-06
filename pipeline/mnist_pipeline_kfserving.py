@@ -60,7 +60,6 @@ def mnist_pipeline(volume_size, learning_rate, dropout_rate, checkpoint_dir,
         mnist.after(vop)
         result.after(mnist)
         kfserving.after(mnist)
-        kfserving.after(vop)
 
 arguments = {'volume_size' : '5Gi',
              'learning_rate': '0.01',
