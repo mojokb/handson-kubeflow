@@ -31,7 +31,7 @@ limitations under the License.
          <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
             <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>
             <div class="mdl-layout__header-row">
-               <h3>Mnist - KFServing UI on Kubeflow UI</h3>
+               <h3>Mnist - KFServing UI on Kubeflow</h3>
             </div>
          </header>
          <main class="mdl-layout__content">
@@ -46,11 +46,11 @@ limitations under the License.
                            <label class="mdl-textfield__label" for="sample1">Model Name</label>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:250px">
-                           <input class="mdl-textfield__input" type="text" id="KFServing name" name="name" value="{{ args.name }}">
+                           <input class="mdl-textfield__input" type="text" id="server-name" name="name" value="{{ args.name }}">
                            <label class="mdl-textfield__label" for="sample1">Server Name</label>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:250px">
-                           <input class="mdl-textfield__input" type="text" id="Cluster IP" name="addr" value="{{ args.addr }}">
+                           <input class="mdl-textfield__input" type="text" id="server-addr" name="addr" value="{{ args.addr }}">
                            <label class="mdl-textfield__label" for="sample1">Server Name</label>
                         </div>
                         <button class="mdl-button mdl-js-button">Connect</button>
@@ -82,20 +82,6 @@ limitations under the License.
                               <td class="mdl-data-table__cell--non-numeric"><b>Prediction</b></td>
                               <td><b> {{ output.prediction }}</b></td>
                            </tr>
-                           {% for score in output.scores %}
-                           <tr>
-                              <td class="mdl-data-table__cell--non-numeric">Probability {{ score.index }}:</td>
-                              <td>
-                                 <div id="progressbar{{ score.index }}"
-                                    class="mdl-progress mdl-js-progress"
-                                    style="width:120;"></div>
-                                 <script language = "javascript">
-                                    document.querySelector('#progressbar{{ score.index }}').addEventListener('mdl-componentupgraded',
-                                    function() { this.MaterialProgress.setProgress({{ score.val * 100 }}); })
-                                 </script>
-                              </td>
-                           </tr>
-                           {% endfor %}
                         </tbody>
                      </table>
                      <br><br>
