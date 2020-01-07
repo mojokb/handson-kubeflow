@@ -56,6 +56,7 @@ def get_prediction(x,
   headers = {'Host': server_name}
   request_url = "http://" + server_ip + "v1/models/" + model_name + ":predict"
   logging.info(" request_url " + request_url)
+  logging.info(" x " + x )
   response = requests.post(request_url,
                            json=x,
                            headers=headers)
