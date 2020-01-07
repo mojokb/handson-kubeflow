@@ -50,12 +50,12 @@ def main():
                            server_ip=server_ip_arg,
                            server_name=server_name_arg)
     # if no exceptions thrown, server connection was a success
-    connection["text"] = "Connected (model version: " + str(ver) + ")"
+    connection["text"] = "Connected (model version: )"
     connection["success"] = True
     # parse class confidence scores from server prediction
     scores_dict = []
     for i in range(0, 10):
-      scores_dict += [{"index": str(i), "val": scores[i]}]
+      scores_dict += [{"index": str(i)}]
     output = {"truth": y, "prediction": pred,
               "img_path": img_path, "scores": scores_dict}
   except Exception as e: # pylint: disable=broad-except
