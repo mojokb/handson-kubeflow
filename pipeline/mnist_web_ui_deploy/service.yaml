@@ -1,12 +1,13 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: the-service
+  name: kf-mnist-webui-service
 spec:
   selector:
-    deployment: hello
-  type: LoadBalancer
+    deployment: kf-mnist-webui
+  type: NodePort
   ports:
   - protocol: TCP
-    port: 8666
-    targetPort: 8080
+    nodePort: 32000
+    port: 5000
+    targetPort: 5000

@@ -1,62 +1,40 @@
-# Copyright 2018 The Kubeflow Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+FROM python:3.6
 
-FROM debian
+USER root
 
-RUN apt-get update -q && apt-get upgrade -y && \
-    apt-get install -y -qq --no-install-recommends \
-      apt-transport-https \
-      ca-certificates \
-      git \
-      gnupg \
-      lsb-release \
-      unzip \
-      wget && \
-    wget --no-verbose -O /opt/ks_0.13.1_linux_amd64.tar.gz \
-      https://github.com/ksonnet/ksonnet/releases/download/v0.13.1/ks_0.13.1_linux_amd64.tar.gz && \
-    tar -C /opt -xzf /opt/ks_0.13.1_linux_amd64.tar.gz && \
-    cp /opt/ks_0.13.1_linux_amd64/ks /bin/. && \
-    rm -f /opt/ks_0.13.1_linux_amd64.tar.gz && \
-    wget --no-verbose -O /bin/kubectl \
-      https://storage.googleapis.com/kubernetes-release/release/v1.11.2/bin/linux/amd64/kubectl && \
-    chmod u+x /bin/kubectl && \
-    wget --no-verbose -O /opt/kubernetes_v1.11.2 \
-      https://github.com/kubernetes/kubernetes/archive/v1.11.2.tar.gz && \
-    mkdir -p /src && \
-    tar -C /src -xzf /opt/kubernetes_v1.11.2 && \
-    rm -rf /opt/kubernetes_v1.11.2 && \
-    wget --no-verbose -O /opt/google-apt-key.gpg \
-      https://packages.cloud.google.com/apt/doc/apt-key.gpg && \
-    apt-key add /opt/google-apt-key.gpg && \
-    export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
-    echo "deb https://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" >> \
-      /etc/apt/sources.list.d/google-cloud-sdk.list && \
-    apt-get update -q && \
-    apt-get install -y -qq --no-install-recommends google-cloud-sdk && \
-    gcloud config set component_manager/disable_update_check true
+RUN apt-get update && apt-get install -yq --no-install-recommends \
+  apt-transport-https \
+  build-essential \
+  bzip2 \
+  ca-certificates \
+  curl \
+  g++ \
+  git \
+  gnupg \
+  graphviz \
+  locales \
+  lsb-release \
+  openssh-client \
+  sudo \
+  unzip \
+  vim \
+  wget \
+  zip \
+  && apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
 
-ENV KUBEFLOW_VERSION v0.4.0
+RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+RUN echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+RUN apt-get update
+RUN apt-get install -y kubectl
 
-# Checkout the kubeflow packages at image build time so that we do not
-# require calling in to the GitHub API at run time.
-RUN cd /src && \
-    mkdir -p github.com/kubeflow && \
-    cd github.com/kubeflow && \
-    git clone https://github.com/kubeflow/kubeflow && \
-    cd kubeflow && \
-    git checkout ${KUBEFLOW_VERSION}
+RUN wget https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.5.3/kustomize_v3.5.3_linux_amd64.tar.gz
+RUN tar xzvf kustomize_v3.5.3_linux_amd64.tar.gz
+RUN mv kustomize /usr/local/bin
 
+ADD ./deployment.yaml /mnist_web_ui/deployment.yaml
+ADD ./service.yaml /mnist_web_ui/service.yaml
+ADD ./kustomization.yaml /mnist_web_ui/kustomization.yaml
 ADD ./src/deploy.sh /bin/.
 
 ENTRYPOINT ["/bin/deploy.sh"]
