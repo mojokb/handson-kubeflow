@@ -58,15 +58,15 @@ def get_prediction(x,
   request_url = "http://" + server_ip + "/v1/models/" + model_name + ":predict"
   logging.info(" request_url " + request_url)
 
-  x = x.astype(np.uint8).reshape(-1, 784)
-  json_x = {"instances": [{"flatten_input": []}]}
-  json_x["instances"][0]["flatten_input"] = json.dumps(x[0].tolist())
+  random_x = x.astype(np.uint8).reshape(-1, 784)
+  json_x = json.dumps(
+    {"instances": [{'flatten_input': random_x[0].tolist()}]})
 
   logging.info("json_x")
   logging.info(json_x)
 
   response = requests.post(request_url,
-                           data=json.dumps(json_x),
+                           data=json_x,
                            headers=headers)
   logging.info("response:")
   logging.info(response.status_code)
