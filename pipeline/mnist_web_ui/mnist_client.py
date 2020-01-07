@@ -23,6 +23,7 @@ import logging
 import numpy as np
 import tensorflow as tf
 import requests
+import random
 
 from PIL import Image
 
@@ -73,16 +74,19 @@ def random_mnist(save_path=None):
   """
 
   mnist = tf.keras.datasets.mnist
-  batch_size = 1
-  batch_x, batch_y = mnist.test.next_batch(batch_size)
+  (batch_x, y_train), (x_test, y_test) = mnist.load_data()
+  random_num = random.randint(1, 10)
+  random_x = x_test[random_num]
+  random_y = y_test[random_num]
   saved = False
+
   if save_path is not None:
     # save image file to disk
     try:
-      data = (batch_x * 255).astype(np.uint8).reshape(28, 28)
+      data = random_x.astype(np.uint8).reshape(28, 28)
       img = Image.fromarray(data, 'L')
       img.save(save_path)
       saved = True
     except Exception as e: # pylint: disable=broad-except
       logging.error("There was a problem saving the image; %s", e)
-  return batch_x, np.argmax(batch_y), saved
+  return random_x, np.argmax(random_y), saved
