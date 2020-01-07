@@ -65,7 +65,7 @@ def get_prediction(x,
   json_x["instances"][0]["flatten_input"] = json.dumps(x.tolist())
 
   response = requests.post(request_url,
-                           json=json_x,
+                           data=json_x,
                            headers=headers)
   logging.info("response:")
   logging.info(response)
