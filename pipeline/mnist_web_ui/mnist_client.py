@@ -24,6 +24,7 @@ import numpy as np
 import tensorflow as tf
 import requests
 import random
+import json
 
 from PIL import Image
 
@@ -57,9 +58,17 @@ def get_prediction(x,
   request_url = "http://" + server_ip + "v1/models/" + model_name + ":predict"
   logging.info(" request_url " + request_url)
   logging.info(x)
+
+  dic = {}
+  dic['flatten_input'] = x
+  json_x = {"instances": [{"flatten_input": []}]}
+  json_x["instances"][0] = json.dumps(dic)
+
   response = requests.post(request_url,
-                           json=x,
+                           json=json_x,
                            headers=headers)
+  logging.info("response:")
+  logging.info(response)
   return 1
 
 
