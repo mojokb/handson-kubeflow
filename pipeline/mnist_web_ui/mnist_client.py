@@ -89,7 +89,7 @@ def random_mnist(save_path=None):
 
   mnist = tf.keras.datasets.mnist
   (batch_x, y_train), (x_test, y_test) = mnist.load_data()
-  random_num = random.randint(1, 10)
+  random_num = random.randint(1, 100)
   random_x = x_test[random_num]
   random_y = y_test[random_num]
   saved = False
@@ -103,4 +103,4 @@ def random_mnist(save_path=None):
       saved = True
     except Exception as e: # pylint: disable=broad-except
       logging.error("There was a problem saving the image; %s", e)
-  return random_x, np.argmax(random_y), saved
+  return random_x, random_y, saved
