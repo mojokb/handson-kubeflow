@@ -71,7 +71,8 @@ def get_prediction(x,
   logging.info("response:")
   logging.info(response.status_code)
   logging.info(response.text)
-  return {"predictions": [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0]]}
+  predict_result = np.argmax(response.json()['predictions'][0])
+  return predict_result
 
 
 def random_mnist(save_path=None):
