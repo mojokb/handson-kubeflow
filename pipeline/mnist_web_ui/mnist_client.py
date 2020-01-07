@@ -65,11 +65,12 @@ def get_prediction(x,
   json_x["instances"][0]["flatten_input"] = json.dumps(x.tolist())
 
   response = requests.post(request_url,
-                           data=json_x,
+                           data=json.dumps(json_x),
                            headers=headers)
   logging.info("response:")
-  logging.info(response)
-  return 1
+  logging.info(response.status_code)
+  logging.info(response.text)
+  return {"predictions": [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0]]}
 
 
 def random_mnist(save_path=None):
