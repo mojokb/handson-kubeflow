@@ -41,6 +41,7 @@ def main():
   connection = {"text": "", "success": False}
   img_id = str(uuid.uuid4())
   img_path = "static/tmp/" + img_id + ".png"
+  logging.info("img_path " + img_path)
   try:
     # get a random test MNIST image
     x, y, _ = random_mnist(img_path)
@@ -49,6 +50,7 @@ def main():
                            model_name=model_arg,
                            server_ip=server_ip_arg,
                            server_name=server_name_arg)
+    logging.info("pred " + pred)
     # if no exceptions thrown, server connection was a success
     connection["text"] = "Connected (model version: )"
     connection["success"] = True
