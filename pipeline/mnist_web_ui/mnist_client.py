@@ -59,10 +59,10 @@ def get_prediction(x,
   logging.info(" request_url " + request_url)
   logging.info(x)
 
-  dic = {}
-  dic['flatten_input'] = x
+
+  x = x.astype(np.uint8).reshape(-1, 784)
   json_x = {"instances": [{"flatten_input": []}]}
-  json_x["instances"][0] = json.dumps(dic)
+  json_x["instances"][0]["flatten_input"] = json.dumps(x.tolist())
 
   response = requests.post(request_url,
                            json=json_x,
