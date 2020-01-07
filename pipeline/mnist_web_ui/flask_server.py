@@ -47,8 +47,8 @@ def main():
     # get prediction from TensorFlow server
     pred = get_prediction(x,
                            model_name=model_arg,
-                           server_ip=addr_arg,
-                           server_name=name_arg)
+                           server_ip=server_ip_arg,
+                           server_name=server_name_arg)
     # if no exceptions thrown, server connection was a success
     connection["text"] = "Connected (model version: " + str(ver) + ")"
     connection["success"] = True
