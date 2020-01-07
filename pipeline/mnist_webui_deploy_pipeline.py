@@ -3,10 +3,10 @@ import kfp.dsl as dsl
 
 @dsl.pipeline(
     name='MnistWebUi',
-    description='Print HelloWorld'
+    description='web-ui by kustomize build'
 )
 def mnist_web_ui_pipeline():
-    hello = dsl.ContainerOp(
+    mnist_web_ui = dsl.ContainerOp(
         name='mnist_web_ui',
         image='brightfly/kfserving-mnist-web-ui-deploy:latest',
     )
