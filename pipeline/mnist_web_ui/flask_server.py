@@ -34,7 +34,7 @@ def main():
   model_arg = request.args.get('model', 'kfserving-mnist-01')
   server_name_arg = request.args.get('name', 'kfserving-mnist-01.kubeflow.example.com')
   server_ip_arg = request.args.get('addr', '10.108.37.106')
-  args = {"model": model_arg, "server_name": server_name_arg, "server_ip": server_ip_arg}
+  args = {"model": model_arg, "name": server_name_arg, "addr": server_ip_arg}
   logging.info("Request args: %s", args)
 
   output = None

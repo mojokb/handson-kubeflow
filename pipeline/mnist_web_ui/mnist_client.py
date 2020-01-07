@@ -55,7 +55,7 @@ def get_prediction(x,
 
   # kfserving-mnist-01.kubeflow.example.com
   headers = {'Host': server_name}
-  request_url = "http://" + server_ip + "v1/models/" + model_name + ":predict"
+  request_url = "http://" + server_ip + "/v1/models/" + model_name + ":predict"
   logging.info(" request_url " + request_url)
   logging.info(x)
 
