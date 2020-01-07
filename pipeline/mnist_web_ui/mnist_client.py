@@ -62,7 +62,7 @@ def get_prediction(x,
 
   x = x.astype(np.uint8).reshape(-1, 784)
   json_x = {"instances": [{"flatten_input": []}]}
-  json_x["instances"][0]["flatten_input"] = json.dumps(x.tolist())
+  json_x["instances"][0]["flatten_input"] = json.dumps(x[0].tolist())
 
   response = requests.post(request_url,
                            data=json.dumps(json_x),
