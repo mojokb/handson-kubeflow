@@ -43,7 +43,7 @@ ADD templates/* /home/templates/
 ADD static/styles /home/static/styles/
 RUN mkdir /home/static/tmp/
 ADD static/scripts/ /home/static/scripts/
-
+ADD mnist.npz /mnz/
 # start server on port 5000
 WORKDIR /home/
 EXPOSE 5000
