@@ -30,8 +30,8 @@ from PIL import Image
 
 
 def get_prediction(x,
-                   model_name = 'kfserving-mnist-01',
-                   server_ip='10.108.37.106',
+                   model_name = 'kfserving-mnist-01-',
+                   server_ip='60.100.91.165:31000',
                    server_name='kfserving-mnist-01.kubeflow.example.com'):
   """
   Retrieve a prediction from a TensorFlow model server
@@ -87,8 +87,7 @@ def random_mnist(save_path=None):
   :return 2: a bool representing whether the image file was saved to disk
   """
 
-  mnist = tf.keras.datasets.mnist
-  (batch_x, y_train), (x_test, y_test) = mnist.load_data()
+  (batch_x, y_train), (x_test, y_test) = tf.keras.dataset.mnist.load_data('/mnz/mnist.npz')
   random_num = random.randint(1, 100)
   random_x = x_test[random_num]
   random_y = y_test[random_num]
