@@ -87,7 +87,7 @@ def random_mnist(save_path=None):
   :return 2: a bool representing whether the image file was saved to disk
   """
 
-  (batch_x, y_train), (x_test, y_test) = tf.keras.dataset.mnist.load_data('/mnz/mnist.npz')
+  (batch_x, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data('/mnz/mnist.npz')
   random_num = random.randint(1, 100)
   random_x = x_test[random_num]
   random_y = y_test[random_num]
