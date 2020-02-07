@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: shi-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      pod-is-for: shi-server
+  template:
+    metadata:
+      labels:
+        pod-is-for: shi-server
+    spec:
+      containers:
+      - name: simple-pyhton-server
+        image: kubeflow-registry.default.svc.cluster.local:30000/webserver-shi:latest
+        ports:
+        - containerPort: 9000
