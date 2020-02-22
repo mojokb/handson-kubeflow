@@ -39,6 +39,8 @@ RUN apt-get install -y kubectl
 RUN pip install jupyterlab && \
     jupyter serverextension enable --py jupyterlab --sys-prefix
 
+RUN pip install kubernetes kubeflow kfp
+
 ARG NB_USER=jovyan
 
 EXPOSE 8888
