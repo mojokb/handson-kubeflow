@@ -2,8 +2,7 @@ import os
 import tensorflow as tf
 
 from kubeflow import fairing
-# Setting up google container repositories (GCR) for storing output containers
-# You can use any docker container registry istead of GCR
+
 DOCKER_REGISTRY = 'kubeflow-registry.default.svc.cluster.local:30000'
 fairing.config.set_builder(
     'append',
