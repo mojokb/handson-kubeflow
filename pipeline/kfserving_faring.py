@@ -48,25 +48,22 @@ class KFServing(object):
         
 if __name__ == '__main__':
     if os.getenv('FAIRING_RUNTIME', None) is None:
-        from kubeflow import fairing
-        from kubeflow.fairing.kubernetes import utils as k8s_utils
+        from kubeflow.fairing.builders.append.append import AppendBuilder
+        from kubeflow.fairing.preprocessors.converted_notebook import ConvertNotebookPreprocessor
+
         DOCKER_REGISTRY = 'kubeflow-registry.default.svc.cluster.local:30000'
-        fairing.config.set_builder(
-            'append',
-            image_name='kfserving',
-            base_image='brightfly/kubeflow-kfserving:latest',
+        base_image='brightfly/kubeflow-kfserving:latest'
+        image_name='kfserving'
+
+        builder = AppendBuilder(
             registry=DOCKER_REGISTRY,
-            push=True)
-        # cpu 1, memory 1GiB
-        fairing.config.set_deployer('job',
-                                    namespace='ddd'
-                                    )
-        # python3
-        import IPython
-        ipy = IPython.get_ipython()
-        if ipy is None:
-            fairing.config.set_preprocessor('python', input_files=[__file__])        
-        fairing.config.run()
+            image_name=image_name,
+            base_image=base_image,
+            push=True,
+            preprocessor=ConvertNotebookPreprocessor(
+                notebook_file="kfserving_fairing.ipynb" )
+            )
+        builder.build()
     else:
         serving = KFServing()
         serving.run()
