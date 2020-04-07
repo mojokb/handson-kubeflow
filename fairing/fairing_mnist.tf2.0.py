@@ -28,11 +28,11 @@ if __name__ == '__main__':
         from kubeflow import fairing
         from kubeflow.fairing.kubernetes import utils as k8s_utils
 
-        DOCKER_REGISTRY = 'registry.zipsacoding.com'
+        DOCKER_REGISTRY = 'kubeflow-registry.default.svc.cluster.local:30000'
         fairing.config.set_builder(
             'append',
             image_name='katib-job',
-            base_image='gcr.io/kubeflow-images-public/tensorflow-2.0.0a0-notebook-gpu:v0.7.0',
+            base_image='brightfly/kubeflow-jupyter-lab:tf2.0-cpu',
             registry=DOCKER_REGISTRY, 
             push=True)
         # cpu 1, memory 1GiB
