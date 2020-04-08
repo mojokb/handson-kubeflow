@@ -25,6 +25,8 @@ class MyModel(object):
         parser.add_argument('--tensorboard_log', required=False, default='/result/log')                
         args = parser.parse_args()
 
+        tensorboard_log = args.tensorboard_log + "/" + args.model_version
+        
         (x_train, y_train), (x_test, y_test) = mnist.load_data()
         x_train, x_test = x_train / 255.0, x_test / 255.0
         
@@ -53,13 +55,12 @@ class MyModel(object):
             model.fit(x_train, y_train,
                       verbose=0,
                       validation_data=(x_test, y_test),
-                      epochs=1,
+                      epochs=5,
                       callbacks=[KatibMetricLog(),
-                                tf.keras.callbacks.TensorBoard(log_dir=args.tensorboard_log),
+                                tf.keras.callbacks.TensorBoard(log_dir=tensorboard_log),
                                 tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_prefix,
                                        save_weights_only=True)
                                 ])
-            
             minioClient = Minio('minio-service.kubeflow.svc.cluster.local:9000',
                   access_key='minio',
                   secret_key='minio123',
@@ -68,18 +69,20 @@ class MyModel(object):
             path = args.saved_model_dir + "/" + args.model_version        
             model.save(path, save_format='tf')
             
-            for currentpath, folders, files in os.walk(args.tensorboard_log):
+            for currentpath, folders, files in os.walk(tensorboard_log):
                 for file in files: 
                     print(os.path.join(currentpath, file))
                     log_file = str(os.path.join(currentpath, file))
                     minioClient.fput_object('tensorboard', log_file[1:], log_file)
-            
+                    
+            # for Tensorboard artifact minio:// s3:// :<
             metadata = {
                 'outputs': [{
                     'type': 'tensorboard',
-                    'source': "minio://tensorboard" + args.tensorboard_log + "/" + args.model_version
+                    'source': 's3://tensorboard' + tensorboard_log
                 }]
-            }            
+            }
+            
             with open('/mlpipeline-ui-metadata.json', 'w') as f:
               json.dump(metadata, f)            
 

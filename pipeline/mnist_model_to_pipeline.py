@@ -36,7 +36,18 @@ def mnist_pipeline(learning_rate, dropout_rate, checkpoint_dir, saved_model_dir,
                 "--saved_model_dir", saved_model_dir,
                 "--tensorboard_log", tensorboard_log
             ],
-            pvolumes={"/result": vop.volume}
+            pvolumes={"/result": vop.volume},
+            output_artifact_paths={'mlpipeline-ui-metadata': '/mlpipeline-ui-metadata.json'},
+            container_kwargs={'env': [
+                                        V1EnvVar('S3_ENDPOINT', 'minio-service.kubeflow.svc.cluster.local:9000'),
+                                        V1EnvVar('AWS_ENDPOINT_URL', 'http://minio-service.kubeflow.svc.cluster.local:9000'),                                     
+                                        V1EnvVar('AWS_ACCESS_KEY_ID', 'minio'),                                     
+                                        V1EnvVar('AWS_SECRET_ACCESS_KEY', 'minio123'),                                  
+                                        V1EnvVar('AWS_REGION', 'us-east-1'),                                                     
+                                        V1EnvVar('S3_USE_HTTPS', '0'),                                                                     
+                                        V1EnvVar('S3_VERIFY_SSL', '0'),                                                                                     
+                                     ]}
+
         )
         
         result = dsl.ContainerOp(
@@ -48,15 +59,14 @@ def mnist_pipeline(learning_rate, dropout_rate, checkpoint_dir, saved_model_dir,
 
         mnist.after(vop)
         result.after(mnist)
-    
 
-arguments = {'learning_rate': '0.01',
-             'dropout_rate': '0.2',
-             'checkpoint_dir': '/reuslt/training_checkpoints',
-             'saved_model_dir':'/result/saved_model',
-             'tensorboard_log': '/result/log' 
-            }
-    
+        arguments = {'learning_rate': '0.01',
+                     'dropout_rate': '0.2',
+                     'checkpoint_dir': '/reuslt/training_checkpoints',
+                     'model_version' : '001',
+                     'saved_model_dir':'/result/saved_model',
+                     'tensorboard_log': '/result/log'
+                    }
 if __name__ == '__main__':
     kfp.Client().create_run_from_pipeline_func(pipeline_func=mnist_pipeline, 
                                                arguments=arguments)
