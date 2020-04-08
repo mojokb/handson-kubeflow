@@ -1,7 +1,12 @@
 import os
 import tensorflow as tf
 import argparse
+import json
 from tensorflow.python.keras.callbacks import Callback
+from minio import Minio
+from minio.error import ResponseError
+
+
 
 
 class MyModel(object):
@@ -15,6 +20,7 @@ class MyModel(object):
         parser.add_argument('--learning_rate', required=False, type=float, default=0.01)
         parser.add_argument('--dropout_rate', required=False, type=float, default=0.2)
         parser.add_argument('--checkpoint_dir', required=False, default='/reuslt/training_checkpoints')
+        parser.add_argument('--model_version', required=False, default='001')
         parser.add_argument('--saved_model_dir', required=False, default='/result/saved_model')        
         parser.add_argument('--tensorboard_log', required=False, default='/result/log')                
         args = parser.parse_args()
@@ -47,14 +53,35 @@ class MyModel(object):
             model.fit(x_train, y_train,
                       verbose=0,
                       validation_data=(x_test, y_test),
-                      epochs=5,
+                      epochs=1,
                       callbacks=[KatibMetricLog(),
                                 tf.keras.callbacks.TensorBoard(log_dir=args.tensorboard_log),
                                 tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_prefix,
                                        save_weights_only=True)
                                 ])
-            path = args.saved_model_dir        
+            
+            minioClient = Minio('minio-service.kubeflow.svc.cluster.local:9000',
+                  access_key='minio',
+                  secret_key='minio123',
+                  secure=False)            
+            
+            path = args.saved_model_dir + "/" + args.model_version        
             model.save(path, save_format='tf')
+            
+            for currentpath, folders, files in os.walk(args.tensorboard_log):
+                for file in files: 
+                    print(os.path.join(currentpath, file))
+                    log_file = str(os.path.join(currentpath, file))
+                    minioClient.fput_object('tensorboard', log_file[1:], log_file)
+            
+            metadata = {
+                'outputs': [{
+                    'type': 'tensorboard',
+                    'source': "minio://tensorboard" + args.tensorboard_log + "/" + args.model_version
+                }]
+            }            
+            with open('/mlpipeline-ui-metadata.json', 'w') as f:
+              json.dump(metadata, f)            
 
 class KatibMetricLog(Callback):
     def on_batch_end(self, batch, logs={}):
@@ -85,7 +112,7 @@ if __name__ == '__main__':
             push=True)
         # cpu 1, memory 1GiB
         fairing.config.set_deployer('job',
-                                    namespace='amaramusic'
+                                    namespace='handson5'
                                     )
         # python3
         import IPython
