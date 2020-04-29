@@ -1,6 +1,7 @@
 import kfp
 import kfp.dsl as dsl
 import kfp.onprem as onprem
+from kubernetes.client.models import V1EnvVar
 
 def echo_op(text):
     return dsl.ContainerOp(
@@ -14,7 +15,7 @@ def echo_op(text):
     name='MnistPipeline',
     description='mnist '
 )
-def mnist_pipeline(learning_rate, dropout_rate, checkpoint_dir, saved_model_dir, tensorboard_log):
+def mnist_pipeline(learning_rate, dropout_rate, checkpoint_dir, model_version, saved_model_dir, tensorboard_log):
     exit_task = echo_op("Done!")
     with dsl.ExitHandler(exit_task):    
         vop = dsl.VolumeOp(
@@ -27,12 +28,13 @@ def mnist_pipeline(learning_rate, dropout_rate, checkpoint_dir, saved_model_dir,
         
         mnist = dsl.ContainerOp(
             name='Mnist',
-            image='kubeflow-registry.default.svc.cluster.local:30000/katib-job:2B27615F',
-            command=['python', '/app/mnist_to_pipeline.py'],
+            image='kubeflow-registry.default.svc.cluster.local:30000/katib-job:B67AEB5C',
+            command=['python', '/app/mnist.py'],
             arguments=[
                 "--learning_rate", learning_rate,
                 "--dropout_rate", dropout_rate,
                 "--checkpoint_dir", checkpoint_dir,
+                "--model_version", model_version,
                 "--saved_model_dir", saved_model_dir,
                 "--tensorboard_log", tensorboard_log
             ],
@@ -60,13 +62,13 @@ def mnist_pipeline(learning_rate, dropout_rate, checkpoint_dir, saved_model_dir,
         mnist.after(vop)
         result.after(mnist)
 
-        arguments = {'learning_rate': '0.01',
-                     'dropout_rate': '0.2',
-                     'checkpoint_dir': '/reuslt/training_checkpoints',
-                     'model_version' : '001',
-                     'saved_model_dir':'/result/saved_model',
-                     'tensorboard_log': '/result/log'
-                    }
+arguments = {'learning_rate': '0.01',
+             'dropout_rate': '0.2',
+             'checkpoint_dir': '/reuslt/training_checkpoints',
+             'model_version' : '001',
+             'saved_model_dir':'/result/saved_model',
+             'tensorboard_log': '/result/log'
+            }
 if __name__ == '__main__':
     kfp.Client().create_run_from_pipeline_func(pipeline_func=mnist_pipeline, 
                                                arguments=arguments)
