@@ -12,6 +12,7 @@ import os
 import sys
 import argparse
 import logging
+import time
 
 '''
 
@@ -43,6 +44,8 @@ class KFServing(object):
         
         KFServing = KFServingClient()
         KFServing.create(isvc)
+
+        time.sleep(5)  
         
         KFServing.get(serving_name, namespace=namespace, watch=True, timeout_seconds=300)
         
