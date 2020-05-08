@@ -35,10 +35,11 @@ RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key
 RUN echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
 RUN apt-get update
 RUN apt-get install -y kubectl
-RUN pip install kubeflow-fairing
-RUN pip install https://storage.googleapis.com/ml-pipeline/release/latest/kfp.tar.gz --upgrade
-RUN pip install kfserving
+RUN pip install kubeflow-fairing==0.7.2
+RUN pip install kfp==0.5
+RUN pip install kfserving==0.2.2
 RUN pip install kubeflow-kale
+RUN pip install dill
 
 RUN pip install jupyterlab && \
     jupyter serverextension enable --py jupyterlab --sys-prefix
