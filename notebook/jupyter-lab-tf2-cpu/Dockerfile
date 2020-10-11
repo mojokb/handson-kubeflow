@@ -40,6 +40,7 @@ RUN pip install kfp==0.5
 RUN pip install kfserving==0.2.2
 RUN pip install kubeflow-kale
 RUN pip install dill
+RUN pip install kubeflow-katib==0.0.2
 
 
 RUN pip install jupyterlab && \
