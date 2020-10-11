@@ -40,6 +40,7 @@ RUN pip install jupyterlab && \
     jupyter serverextension enable --py jupyterlab --sys-prefix
 
 RUN pip install kubernetes kubeflow kfp redis
+RUN pip install kubeflow-katib==0.0.2
 
 ARG NB_USER=jovyan
 
