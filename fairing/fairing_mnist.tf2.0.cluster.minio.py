@@ -38,9 +38,17 @@ if __name__ == '__main__':
         minio_context_source = MinioContextSource(endpoint_url=minio_endpoint, 
                                                   minio_secret=minio_username, 
                                                   minio_secret_key=minio_key, 
-                                                  region_name=minio_region)        
+                                                  region_name=minio_region)     
+        
+        
+        output_map =  {
+            "Dockerfile": "Dockerfile",
+            "mnist.py": "mnist.py"
+        }        
 
         DOCKER_REGISTRY = 'kubeflow-registry.default.svc.cluster.local:30000'
+        #fairing.config.set_preprocessor('notebook', notebook_file='app.ipynb', output_map=output_map)
+        fairing.config.set_preprocessor('python', output_map=output_map)
         fairing.config.set_builder(
             'cluster',
             image_name='fairing-job',
